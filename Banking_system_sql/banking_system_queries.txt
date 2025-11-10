@@ -1,0 +1,181 @@
+1. Retrieve all customer names who have a balance greater than 50,000.
+
+ select * from account where current_balance > 50000;
++------------+---------------+--------+--------------+-----------------+
+| account_no | customer_name | gender | account_type | current_balance |
++------------+---------------+--------+--------------+-----------------+
+|     100004 | Pooja Sharma  | female | saving       |        52000.75 |
+|     100005 | Harsh Patel   | male   | current      |        60000.00 |
+|     100008 | Ananya Joshi  | female | current      |        80000.00 |
++------------+---------------+--------+--------------+-----------------+
+
+ 2. Display account number, customer name, and account type of all customers having SAVINGS
+ accounts.
+
+ select * from account where account_type = 'saving';
++------------+---------------+--------+--------------+-----------------+
+| account_no | customer_name | gender | account_type | current_balance |
++------------+---------------+--------+--------------+-----------------+
+|     100001 | Aman Singh    | male   | saving       |        25000.00 |
+|     100003 | Ravi Kumar    | male   | saving       |        18000.50 |
+|     100004 | Pooja Sharma  | female | saving       |        52000.75 |
+|     100006 | Simran Kaur   | female | saving       |        30000.00 |
+|     100007 | Vikas Mehra   | male   | saving       |        15000.00 |
+|     100009 | Deepak Sahu   | male   | saving       |        27000.00 |
+|     100010 | Meena Roy     | female | saving       |        40000.00 |
++------------+---------------+--------+--------------+-----------------+
+
+ 3. List all transactions made in the current month.
+
+ select * from transaction where month(trans_date) = month(curdate());
++----------+------------+------------+----------+---------------------+
+| trans_id | account_no | trans_type | amount   | trans_date          |
++----------+------------+------------+----------+---------------------+
+|        1 |     100001 | deposit    |  5000.00 | 2025-11-05 12:03:14 |
+|        2 |     100001 | withdraw   |  2000.00 | 2025-11-05 12:03:14 |
+|        3 |     100002 | deposit    | 10000.00 | 2025-11-05 12:03:14 |
+|        4 |     100003 | withdraw   |  3000.00 | 2025-11-05 12:03:14 |
+|        5 |     100004 | deposit    |  7000.00 | 2025-11-05 12:03:14 |
+|        6 |     100005 | withdraw   | 10000.00 | 2025-11-05 12:03:14 |
+|        7 |     100006 | deposit    |  8000.00 | 2025-11-05 12:03:14 |
+|        8 |     100007 | deposit    |  2500.00 | 2025-11-05 12:03:14 |
+|        9 |     100008 | withdraw   |  5000.00 | 2025-11-05 12:03:14 |
+|       10 |     100009 | deposit    |  4000.00 | 2025-11-05 12:03:14 |
++----------+------------+------------+----------+---------------------+
+
+ 4. Show customers who have not made any transactions yet.
+
+select a.account_no, a.customer_name from account a left join transaction t on a.account_no =t.account_no where t.account_no is null;
++------------+---------------+
+| account_no | customer_name |
++------------+---------------+
+|     100010 | Meena Roy     |
++------------+---------------+
+
+ 5. Display the top 3 customers with the highest account balance.
+
+ select * from account order by current_balance desc limit 3;
++------------+---------------+--------+--------------+-----------------+
+| account_no | customer_name | gender | account_type | current_balance |
++------------+---------------+--------+--------------+-----------------+
+|     100008 | Ananya Joshi  | female | current      |        80000.00 |
+|     100005 | Harsh Patel   | male   | current      |        60000.00 |
+|     100004 | Pooja Sharma  | female | saving       |        52000.75 |
++------------+---------------+--------+--------------+-----------------+
+
+ 6. Retrieve all transactions where the amount is greater than 10,000.
+
+ select * from transaction where amount > 10000;
++----------+------------+------------+----------+---------------------+
+| trans_id | account_no | trans_type | amount   | trans_date          |
++----------+------------+------------+----------+---------------------+
+|        5 |     100004 | deposit    | 13000.00 | 2025-11-05 12:03:14 |
++----------+------------+------------+----------+---------------------+
+
+ 7. Show the total balance of all accounts combined.
+
+ select sum(current_balance) from account;
++----------------------+
+| sum(current_balance) |
++----------------------+
+|            392001.25 |
++----------------------+
+
+ 8. List customers along with their total deposited amount.
+
+ select a.customer_name, t.amount from account a left join transaction t on a.account_no = t.account_no where trans_type = 'deposit';
++---------------+----------+
+| customer_name | amount   |
++---------------+----------+
+| Aman Singh    |  5000.00 |
+| Neha Verma    | 10000.00 |
+| Pooja Sharma  | 13000.00 |
+| Simran Kaur   |  8000.00 |
+| Vikas Mehra   |  2500.00 |
+| Deepak Sahu   |  4000.00 |
++---------------+----------+
+
+ 9. Find customers who made a withdrawal of more than 5,000.
+
+select a.customer_name, t.trans_type, t.amount from account a left join transaction t on a.account_no = t.account_no where trans_type = 'withdraw' and t.amount > 5000;
++---------------+------------+----------+
+| customer_name | trans_type | amount   |
++---------------+------------+----------+
+| Harsh Patel   | withdraw   | 10000.00 |
++---------------+------------+----------+
+
+ 10. Display the most recent transaction date for each account.
+
+ select account_no, max(trans_date) as most_recent_transaction from transaction group by account_no;
++------------+-------------------------+
+| account_no | most_recent_transaction |
++------------+-------------------------+
+|     100001 | 2025-11-05 12:03:14     |
+|     100002 | 2025-11-05 12:03:14     |
+|     100003 | 2025-11-05 12:03:14     |
+|     100004 | 2025-11-05 12:03:14     |
+|     100005 | 2025-11-05 12:03:14     |
+|     100006 | 2025-11-05 12:03:14     |
+|     100007 | 2025-11-05 12:03:14     |
+|     100008 | 2025-11-05 12:03:14     |
+|     100009 | 2025-11-05 12:03:14     |
++------------+-------------------------+
+
+ 11. Retrieve the number of transactions each customer has made.
+
+select a.customer_name, count(t.trans_type) from account a left join transaction t on a.account_no = t.account_no group by a.account_no, a.customer_name;
++---------------+---------------------+
+| customer_name | count(t.trans_type) |
++---------------+---------------------+
+| Aman Singh    |                   2 |
+| Neha Verma    |                   1 |
+| Ravi Kumar    |                   1 |
+| Pooja Sharma  |                   1 |
+| Harsh Patel   |                   1 |
+| Simran Kaur   |                   1 |
+| Vikas Mehra   |                   1 |
+| Ananya Joshi  |                   1 |
+| Deepak Sahu   |                   1 |
+| Meena Roy     |                   0 |
++---------------+---------------------+
+
+ 12. List customers who have both SAVINGS and CURRENT accounts (if allowed).
+
+ select * from account where account_type = 'saving' and account_type = 'current';
+Empty set (0.01 sec)
+
+ 13. Find all accounts created by customers whose name starts with 'P'.
+
+ select * from account where customer_name like 'p%';
++------------+---------------+--------+--------------+-----------------+
+| account_no | customer_name | gender | account_type | current_balance |
++------------+---------------+--------+--------------+-----------------+
+|     100004 | Pooja Sharma  | female | saving       |        52000.75 |
++------------+---------------+--------+--------------+-----------------+
+
+ 14. Retrieve customers sorted by their account balance in descending order.
+
+select * from account order by current_balance desc;
++------------+---------------+--------+--------------+-----------------+
+| account_no | customer_name | gender | account_type | current_balance |
++------------+---------------+--------+--------------+-----------------+
+|     100008 | Ananya Joshi  | female | current      |        80000.00 |
+|     100005 | Harsh Patel   | male   | current      |        60000.00 |
+|     100004 | Pooja Sharma  | female | saving       |        52000.75 |
+|     100002 | Neha Verma    | female | current      |        45000.00 |
+|     100010 | Meena Roy     | female | saving       |        40000.00 |
+|     100006 | Simran Kaur   | female | saving       |        30000.00 |
+|     100009 | Deepak Sahu   | male   | saving       |        27000.00 |
+|     100001 | Aman Singh    | male   | saving       |        25000.00 |
+|     100003 | Ravi Kumar    | male   | saving       |        18000.50 |
+|     100007 | Vikas Mehra   | male   | saving       |        15000.00 |
++------------+---------------+--------+--------------+-----------------+
+
+ 15. Display the average account balance per account type.
+
+select account_type, avg(current_balance) from account group by account_type;
++--------------+----------------------+
+| account_type | avg(current_balance) |
++--------------+----------------------+
+| saving       |         29571.607143 |
+| current      |         61666.666667 |
